@@ -35,7 +35,7 @@ class AlbumsService {
       values: [id]
     }
     const querySong = {
-      text: 'SELECT songs.id, songs.title, songs.performer FROM songs WHERE songs."AlbumId"=$1',
+      text: 'SELECT songs.id, songs.title, songs.performer FROM songs WHERE songs."albumId"=$1',
       values: [id]
     }
     const fetchAlbum = await this._pool.query(queryAlbum)

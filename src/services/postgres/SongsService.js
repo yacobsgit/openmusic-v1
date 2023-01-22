@@ -25,12 +25,8 @@ class SongsService {
   }
 
   async getSongs () {
-    const result = await this._pool.query('SELECT * FROM Songs')
-    return {
-      id: result.rows[0].id,
-      name: result.rows[0].title,
-      year: result.rows[0].performer
-    }
+    const result = await this._pool.query('SELECT id, title, performer FROM songs')
+    return result.rows
   }
 
   async getSongById (id) {
@@ -46,9 +42,22 @@ class SongsService {
     return result.rows.map(mapDBToModel)[0]
   }
 
+  async getSongByalbumId (id) {
+    const query = {
+      text: 'SELECT * FROM songs WHERE "albumsId" = $1',
+      values: [id]
+    }
+    const result = await this._pool.query(query)
+    if (!result.rows.length) {
+      throw new NotFoundError('Lagu tidak ditemukan')
+    }
+
+    return result.rows.map(mapDBToModel)[0]
+  }
+
   async editSongById (id, { title, year, genre, performer, duration, albumId }) {
     const query = {
-      text: 'UPDATE Songs SET title = $1, year = $2, genre = $3, performer = $4, duration = $5, albumId = $6 WHERE id = $7 RETURNING id',
+      text: 'UPDATE Songs SET title = $1, year = $2, genre = $3, performer = $4, duration = $5, "albumId" = $6 WHERE id = $7 RETURNING id',
       values: [title, year, genre, performer, duration, albumId, id]
     }
 
