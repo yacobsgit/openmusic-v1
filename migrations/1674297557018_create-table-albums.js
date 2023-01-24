@@ -6,7 +6,8 @@ exports.up = pgm => {
   pgm.createTable('albums', {
     id: {
       type: 'VARCHAR(50)',
-      primaryKey: true
+      primaryKey: true,
+      foreignKey: true
     },
     name: {
       type: 'TEXT',

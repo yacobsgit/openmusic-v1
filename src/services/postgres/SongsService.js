@@ -31,7 +31,7 @@ class SongsService {
 
   async getSongById (id) {
     const query = {
-      text: 'SELECT * FROM Songs WHERE id = $1',
+      text: 'SELECT * FROM songs WHERE id = $1',
       values: [id]
     }
     const result = await this._pool.query(query)
@@ -42,10 +42,10 @@ class SongsService {
     return result.rows.map(mapDBToModel)[0]
   }
 
-  async getSongByalbumId (id) {
+  async getSongByalbumId (albumId) {
     const query = {
-      text: 'SELECT * FROM songs WHERE "albumsId" = $1',
-      values: [id]
+      text: 'SELECT * FROM songs WHERE "albumId" = $7',
+      values: [albumId]
     }
     const result = await this._pool.query(query)
     if (!result.rows.length) {
@@ -57,7 +57,7 @@ class SongsService {
 
   async editSongById (id, { title, year, genre, performer, duration, albumId }) {
     const query = {
-      text: 'UPDATE Songs SET title = $1, year = $2, genre = $3, performer = $4, duration = $5, "albumId" = $6 WHERE id = $7 RETURNING id',
+      text: 'UPDATE songs SET title = $1, year = $2, genre = $3, performer = $4, duration = $5, "albumId" = $6 WHERE id = $7 RETURNING id',
       values: [title, year, genre, performer, duration, albumId, id]
     }
 
@@ -69,7 +69,7 @@ class SongsService {
 
   async deleteSongById (id) {
     const query = {
-      text: 'DELETE FROM Songs WHERE id = $1 RETURNING id',
+      text: 'DELETE FROM songs WHERE id = $1 RETURNING id',
       values: [id]
     }
 
