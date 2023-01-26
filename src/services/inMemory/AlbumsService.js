@@ -30,6 +30,14 @@ class AlbumsService {
     return Album
   }
 
+  getsongsbyalbumId (id) {
+    const song = this._Song.filter((album) => album.id === id)[0]
+    if (!song) {
+      throw new NotFoundError('lagu tidak ditemukan')
+    }
+    return song
+  }
+
   editAlbumById (id, { name, year }) {
     const index = this._Albums.findIndex((Album) => Album.id === id)
 

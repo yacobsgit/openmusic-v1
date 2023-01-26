@@ -48,9 +48,9 @@ class AlbumsHandler {
 
   async getalbumByIdHandler (request, h) {
     try {
-      const { id } = request.params
+      const { id, albumId } = request.params
       const albumdata = await this._service.getAlbumById(id)
-      const songs = await this._service.getSongsbyalbumById(id)
+      const songs = await this._service.getsongsbyalbumId(albumId)
       const response = h.response({
         status: 'success',
         message: 'berhasil mendapatkan album',
@@ -84,7 +84,7 @@ class AlbumsHandler {
 
   async putalbumByIdHandler (request, h) {
     try {
-      this._validator.validatealbumPayloads(request.payload)
+      await this._validator.validatealbumPayloads(request.payload)
       const { id } = request.params
       await this._service.editAlbumById(id, request.payload)
       const response = h.response({

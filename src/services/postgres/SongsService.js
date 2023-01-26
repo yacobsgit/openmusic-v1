@@ -42,19 +42,6 @@ class SongsService {
     return result.rows.map(mapDBToModel)[0]
   }
 
-  async getSongByalbumId (albumId) {
-    const query = {
-      text: 'SELECT * FROM songs WHERE "albumId" = $7',
-      values: [albumId]
-    }
-    const result = await this._pool.query(query)
-    if (!result.rows.length) {
-      throw new NotFoundError('Lagu tidak ditemukan')
-    }
-
-    return result.rows.map(mapDBToModel)[0]
-  }
-
   async editSongById (id, { title, year, genre, performer, duration, albumId }) {
     const query = {
       text: 'UPDATE songs SET title = $1, year = $2, genre = $3, performer = $4, duration = $5, "albumId" = $6 WHERE id = $7 RETURNING id',

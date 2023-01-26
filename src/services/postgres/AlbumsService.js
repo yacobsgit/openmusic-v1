@@ -29,14 +29,14 @@ class AlbumsService {
     return result.rows.map(mapDBToModel)
   }
 
-  async getAlbumById (id) {
+  async getAlbumById (id, albumId) {
     const queryAlbum = {
       text: 'SELECT * FROM albums WHERE id = $1',
       values: [id]
     }
     const querySong = {
-      text: 'SELECT songs.id, songs.title, songs.performer FROM songs WHERE songs."albumId"=$1',
-      values: [id]
+      text: 'SELECT songs.id, songs.title, songs.performer FROM songs WHERE songs."albumId"= $1',
+      values: [albumId]
     }
     const fetchAlbum = await this._pool.query(queryAlbum)
     const fetchSong = await this._pool.query(querySong)
@@ -53,6 +53,19 @@ class AlbumsService {
       year: fetchAlbum.rows[0].year,
       songs: fetchSong.rows
     }
+  }
+
+  async getsongsbyalbumId (albumId) {
+    const query = {
+      text: 'SELECT * FROM songs WHERE "albumId" = $7',
+      values: [albumId]
+    }
+    const result = await this._pool.query(query)
+    if (!result.rows.length) {
+      throw new NotFoundError('Lagu tidak ditemukan')
+    }
+
+    return result.rows.map(mapDBToModel)[0]
   }
 
   async editAlbumById (id, { name, year }) {
