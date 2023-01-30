@@ -29,29 +29,23 @@ class AlbumsService {
     return result.rows.map(mapDBToModel)
   }
 
-  async getAlbumById (id, albumId) {
+  async getAlbumById (id) {
     const queryAlbum = {
       text: 'SELECT * FROM albums WHERE id = $1',
       values: [id]
     }
-    const querySong = {
-      text: 'SELECT songs.id, songs.title, songs.performer FROM songs WHERE songs."albumId"= $1',
-      values: [albumId]
-    }
+
     const fetchAlbum = await this._pool.query(queryAlbum)
-    const fetchSong = await this._pool.query(querySong)
 
     if (!fetchAlbum.rows.length) {
       throw new NotFoundError('Album tidak ditemukan')
     }
-    if (!fetchSong.rows.length) {
-      throw new NotFoundError('Lagu tidak ditemukan')
-    }
+
     return {
       id: fetchAlbum.rows[0].id,
       name: fetchAlbum.rows[0].name,
       year: fetchAlbum.rows[0].year,
-      songs: fetchSong.rows
+      songs: []
     }
   }
 
